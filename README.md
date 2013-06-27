@@ -38,16 +38,19 @@ This section provides a step-by-step guide so you can get the sample up and runn
 #### Open dev.xcodeproj in Xcode
 1. Open a new Finder window and navigate to the directory you extract the sample client code.  Double click on the dev.xcodeproj file. It will open the project in Xcode automatically.
 
-2. There are missing files, which are displayed in red in Xcode, under dev/CloudPushSample/GTLibrary file group.  Follow [this instruction](https://developers.google.com/appengine/docs/java/endpoints/consume_ios#adding-required-files) to download and import the Google APIs Client Library for iOS.  The dev Xcode project expects the missing files to be located at folder `PushNotificationSample-iOS/CloudPushSample/GTLibrary`.  Copy the downloaded files to the expected folder.  You will need to create *GTLibrary* folder under `PushNotificationSample-iOS/CloudPushSample` manually.
+2. There are missing files, which are displayed in red in Xcode, under dev/CloudPushSample/GTLibrary file group.  Follow [this instruction](https://developers.google.com/appengine/docs/java/endpoints/consume_ios#adding-required-files) to download and import the Google APIs Client Library for iOS.  The dev Xcode project expects the missing files to be located at folder `[directory where you unzipped the downloaded file]/CloudPushSample/GTLibrary`.  Copy the downloaded files to the expected folder.  You will need to create *GTLibrary* folder under `[directory where you unzipped the downloaded file]/CloudPushSample` manually.
 
 3. For missing files, which are displayed in red in Xcode, under dev/CloudPushSample/API file group, navigate to the following URL in a web browser:
 
    *https://{{YOUR_APP_ID}}.appspot.com/_ah/api/discovery/v1/apis/deviceregistration/v1/rpc*
 
-   Right click to save the file as `deviceregistration-v1-rpc.discovery`.  With the discovery file, follow [this instruction](https://developers.google.com/appengine/docs/java/endpoints/consume_ios#compiling-the-client-library-generator) to generate and import the missing files. dev Xcode project expects the missing files to be located at folder `PushNotificationSample-iOS/CloudPushSample/API`.  Copy the generated files into the expected folder.  You will need to create *API* folder under `PushNotificationSample-iOS/CloudPushSample` manually.
+   Right click to save the file as `deviceregistration-v1-rpc.discovery`.  With the discovery file, follow [this instruction](https://developers.google.com/appengine/docs/java/endpoints/consume_ios#compiling-the-client-library-generator) to generate and import the missing files. dev Xcode project expects the missing files to be located at folder `[directory where you unzipped the downloaded file]/CloudPushSample/API`.  Copy the generated files into the expected folder.  You will need to create *API* folder under `[directory where you unzipped the downloaded file]/CloudPushSample` manually.
 
 #### Rename the bundle ID
 1. The iOS client application bundle ID has to match the one you used for creating the SSL certificate and the Provisioning Profile.  Out-of-the-box bundle ID is `com.google.CloudPushSample.dev`.  Please rename the bundle ID accordingly via project TARGETS in Xcode.
+
+#### Update Code Signing Identity
+1. Under the TARGETS' build settings, update the code signing identity to a valid provisioning profile.
 
 #### Update the Client ID and Client Secret
 1. Fill in the kClientID and kClientSecret values in NotificationViewController.m.  The kClientID here has to match with the Client ID you used in the Java Backend as described in step 3 of the Prerequisites.
@@ -55,7 +58,7 @@ This section provides a step-by-step guide so you can get the sample up and runn
 ### Build and Execute CloudPushSample iOS Client
 1. On the top left corner of the toolbar, select `[Your bundle ID] > [Your iPhone name]`.  Then click the `Run` button to execute the app.
 
-2. The application "CloudPushSample" should open up in your iPhone.
+2. The application "CloudPushSample" should open up in your iPhone. Sign in with any Google account login if prompted.
 
 3. When the application opens up, you should find logs such as the following in your Xcode debug area:
 

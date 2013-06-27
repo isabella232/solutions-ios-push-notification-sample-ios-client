@@ -23,8 +23,8 @@
 
 
 @interface NotificationViewController() {
-  GTMOAuth2Authentication *oauth;
-  AppDelegate *appDelegate;
+  GTMOAuth2Authentication *_oauth;
+  AppDelegate *_appDelegate;
 }
 @end
 
@@ -43,8 +43,8 @@ static NSString *kKeyChainName = @"CloudPushSample";
   [super viewDidLoad];
 
   // Link this controller to application
-  appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-  appDelegate.mainControllerDelegate = self;
+  _appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+  _appDelegate.mainControllerDelegate = self;
 
   // Set up message view
   UITextView *myMessageView = self.messageView;
@@ -132,6 +132,7 @@ static NSString *kKeyChainName = @"CloudPushSample";
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
+  _oauth = auth;
 
   if (error) {
     [ViewHelper showPopup:@"Error"
@@ -145,39 +146,39 @@ static NSString *kKeyChainName = @"CloudPushSample";
 }
 
 - (void)authenticateUser {
-  if (!oauth) {
+  if (!_oauth) {
     // Instance doesn't have an authentication object, attempt to fetch from
     // keychain.  This method call always returns an authentication object.
     // If nothing is returned from keychain, this will return an invalid
     // authentication
-    oauth = [GTMOAuth2ViewControllerTouch
+    _oauth = [GTMOAuth2ViewControllerTouch
                 authForGoogleFromKeychainForName:kKeyChainName
                                         clientID:kClientID
                                     clientSecret:kClientSecret];
   }
 
   // Now instance has an authentication object, check if it's valid
-  if ([oauth canAuthorize]) {
+  if ([_oauth canAuthorize]) {
     // Looks like token is good, register the device using the oauth
     [self registerDeviceWithAuthentication];
-    NSLog(@"%@", oauth);
+    NSLog(@"%@", _oauth);
   } else {
     // If there is some sort of error when validating the previous
     // authentication, reset the authentication and force user to login
-    oauth = nil;
+    _oauth = nil;
     [self showUserSignInView];
   }
 }
 
 // Reset access token value for authentication object for Cloud Endpoint.
 - (void)registerDeviceWithAuthentication {
-  if (oauth) {
-    oauth.authorizationTokenKey = @"id_token";
-    [self.service setAuthorizer:oauth];
+  if (_oauth) {
+    _oauth.authorizationTokenKey = @"id_token";
+    [self.service setAuthorizer:_oauth];
 
     // Register device if it hasn't happend yet and device token is available
-    if (!self.registered && appDelegate.tokenString) {
-      [self registerDeviceWithToken:appDelegate.tokenString];
+    if (!self.registered && _appDelegate.tokenString) {
+      [self registerDeviceWithToken:_appDelegate.tokenString];
     }
   }
 
@@ -191,7 +192,7 @@ static NSString *kKeyChainName = @"CloudPushSample";
 // Signing user out and revoke token
 - (void)unAuthenticateUser {
   [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeyChainName];
-  [GTMOAuth2ViewControllerTouch revokeTokenForGoogleAuthentication:oauth];
+  [GTMOAuth2ViewControllerTouch revokeTokenForGoogleAuthentication:_oauth];
 }
 
 @end
